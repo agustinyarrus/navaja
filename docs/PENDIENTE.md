@@ -2,20 +2,7 @@
 
 Lo que falta, en el orden en que conviene hacerlo. Cada punto dice qué hay hoy, qué falta y cómo se verifica.
 
-## 1. img: colores de las WebP con pérdida
-
-**Hoy:** las WebP sin pérdida, con alfa y los GIF salen idénticos a lo que decodifica libwebp (diferencia 0). Las WebP **con pérdida** difieren hasta 20 niveles en todos los píxeles.
-
-**Por qué:** `golang.org/x/image/webp` devuelve la imagen en YCbCr 4:2:0 y la conversión a RGB de Go asume el rango completo de JPEG (JFIF) y toma el croma del píxel más cercano. VP8 usa BT.601 en rango limitado, y libwebp además interpola el croma (su "fancy upsampling", un filtro 9-3-3-1 entre filas de croma vecinas).
-
-**Qué hacer:** convertir las imágenes `*image.YCbCr` y `*image.NYCbCrA` con la misma aritmética de libwebp:
-
-- la conversión en punto fijo de `VP8YUVToR/G/B` (`MultHi(y, 19077)`, `MultHi(v, 26149)`, etc., con el recorte a 0–255);
-- el sobremuestreo de croma de `UpsampleRgbaLinePair`, incluido el caso especial de la primera y la última fila.
-
-**Cómo verificar:** `python internal/imaging/_oracle/pixel_check.py lossy.webp lossy.png` tiene que dar diferencia 0 (el fixture sale de `scripts/fixtures.ps1`).
-
-## 2. vidsquash: terminarla y probarla
+## 1. vidsquash: terminarla y probarla
 
 **Hoy está escrito:**
 
@@ -35,7 +22,7 @@ Lo que falta, en el orden en que conviene hacerlo. Cada punto dice qué hay hoy,
 
 **Referencias de velocidad en la PC de desarrollo:** x264 `medium` a 720p30 ≈ 1,5 veces el tiempo real; VMAF sobre 20 s de 1080p60 ≈ 22 s. Por eso la calidad se mide en muestras y no en el video entero.
 
-## 3. killport
+## 2. killport
 
 No está implementada. La idea:
 
@@ -46,7 +33,7 @@ No está implementada. La idea:
 
 Flags previstos: `--list` (solo mirar), `--yes`, `--tree`, `--tcp`/`--udp`, `--all-states`, y puertos como `3000`, `8080,8081` o `5000-5003`.
 
-## 4. Mejoras
+## 3. Mejoras
 
 **img**
 - WebP animadas: `x/image/webp` solo lee imágenes estáticas.

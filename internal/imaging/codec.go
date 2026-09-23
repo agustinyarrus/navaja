@@ -136,13 +136,17 @@ func Decode(r io.Reader) (*Decoded, error) {
 	if decodeErr != nil {
 		return nil, fmt.Errorf("no pude decodificar el %s: %w", format, decodeErr)
 	}
+	alpha := hasAlpha(img) // antes de convertir: un YCbCr sin alfa sigue sin alfa
+	if format == WEBP {
+		img = convertWebP(img)
+	}
 	b := img.Bounds()
 	return &Decoded{
 		Source:   format,
 		Frames:   []image.Image{img},
 		Width:    b.Dx(),
 		Height:   b.Dy(),
-		HasAlpha: hasAlpha(img),
+		HasAlpha: alpha,
 	}, nil
 }
 

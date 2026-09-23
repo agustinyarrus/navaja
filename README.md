@@ -8,7 +8,7 @@ Comparten un núcleo de consola propio (colores pastel sobre negro, progreso viv
 
 | Herramienta | Qué hace | Estado |
 |---|---|---|
-| `img` | Convierte imágenes en lote: webp, gif, jpg, bmp, tiff → png y demás | ✅ lista (ver pendiente con webp con pérdida) |
+| `img` | Convierte imágenes en lote: webp, gif, jpg, bmp, tiff → png y demás | ✅ lista |
 | `clip2qr` | Dibuja en la terminal un QR del portapapeles, y opcionalmente lo guarda como PNG | ✅ lista |
 | `pdf-merge` | Combina PDF con selección de páginas, marcadores, formularios, cifrado y deduplicación | ✅ lista |
 | `vidsquash` | Comprime un video para que entre en un tamaño (Discord, WhatsApp, mail) | 🚧 motor escrito, falta el ejecutable |
@@ -44,6 +44,7 @@ img logo.webp --to jpg -b '#0b0b0f'  # aplanar la transparencia sobre un fondo o
 
 - Lee webp (con y sin pérdida, con alfa), gif (estático y animado), png, jpg, bmp y tiff. Escribe png, jpg, gif, bmp y tiff (webp no tiene codificador en Go puro).
 - Reconoce el formato por el contenido, no por la extensión: un `.png` que en realidad es webp se convierte igual.
+- Las webp con pérdida se pasan a RGB con la misma aritmética que libwebp (el decodificador de Chrome): los colores salen idénticos al bit, no "parecidos".
 - Los GIF animados se componen respetando el método de disposición de cada cuadro: `--frames` exporta cuadros completos, no los recortes parciales que guarda el archivo.
 - El alfa se conserva hacia png y se aplana sobre `--background` hacia jpg y bmp.
 - Nunca borra el original ni sobrescribe sin `--force`; detecta cuando dos entradas caerían en la misma salida. Escritura atómica: un corte no deja archivos a medias.
@@ -103,7 +104,7 @@ Cada herramienta se contrasta con un decodificador o lector independiente, no co
 
 | Herramienta | Oráculo | Resultado |
 |---|---|---|
-| `img` | Pillow (libwebp, libjpeg…) píxel a píxel | webp sin pérdida, alfa, gif: diferencia 0 · webp con pérdida: pendiente |
+| `img` | Pillow (libwebp, libjpeg…) píxel a píxel | webp con y sin pérdida, con alfa y gif: diferencia 0 · 18 de 18 casos de estrés |
 | `clip2qr` | zxing-cpp decodifica los PNG | 60 de 60, hasta la versión 40 |
 | `pdf-merge` | qpdf (estructura), pypdf (texto) y PDFium (render píxel a píxel) | 56 de 56 PDF reales; 13 de 13 casos de cifrado; 6 de 6 de marcadores; formularios con todos sus valores |
 

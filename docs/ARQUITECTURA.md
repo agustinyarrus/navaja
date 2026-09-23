@@ -52,6 +52,11 @@
 ### imaging (img)
 
 - El formato se reconoce por los primeros bytes (magic numbers), no por la extensión.
+- **WebP con pérdida**: `x/image/webp` entrega YCbCr 4:2:0 y `webpcolor.go` lo pasa a RGB con la aritmética de libwebp:
+  - la conversión en punto fijo de BT.601 en rango limitado;
+  - el sobremuestreo de croma 9-3-3-1 entre filas vecinas, con el mismo recorrido de filas de `EmitFancyRGB`.
+
+  La salida coincide al bit con el decodificador de referencia.
 - **Composición de GIF**: los cuadros suelen guardar solo el rectángulo que cambió. Se reconstruye cada cuadro completo aplicando el método de disposición del anterior: nada, restaurar al fondo (transparente) o restaurar al lienzo previo. Cuesta O(cuadros × píxeles).
 - **Salida GIF**: paleta de 256 colores con dithering de Floyd–Steinberg.
 - **Formatos opacos**: la transparencia se aplana sobre el fondo elegido.

@@ -27,7 +27,19 @@ Compara la salida contra el origen decodificado por Pillow (libwebp, libjpeg…)
 | WebP sin pérdida | diferencia 0 en RGB y alfa |
 | WebP con alfa | diferencia 0 |
 | GIF | diferencia 0 |
-| WebP con pérdida | hasta 20 niveles: pendiente, ver [PENDIENTE.md](PENDIENTE.md) |
+| WebP con pérdida | diferencia 0 |
+
+```powershell
+python internal\imaging\_oracle\webp_stress.py <img.exe> <carpeta>
+```
+
+El estrés de las WebP con pérdida genera 18 casos con Pillow y los compara contra libwebp; los 18 dan idénticos:
+
+- tamaños mínimos e impares, de 1×1 a 333×201, que es donde se complican los bordes del sobremuestreo;
+- ruido de color puro, donde el croma cambia en cada píxel;
+- los mismos casos con alfa.
+
+**Lección:** las WebP con pérdida llegaron a diferir hasta 20 niveles en todos los píxeles. `x/image/webp` entrega YCbCr y la conversión de Go lo trataba como un JPEG: rango completo y el croma del píxel más cercano. VP8 usa BT.601 en rango limitado, y libwebp interpola el croma con un filtro 9-3-3-1. `webpcolor.go` replica esa aritmética.
 
 También se verificó:
 
