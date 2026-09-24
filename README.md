@@ -132,11 +132,10 @@ scripts/              generador de fixtures de prueba
 
 ## Seguir desde otra PC
 
-1. El repositorio es privado: en la PC nueva, `gh auth login` con la cuenta `agustinyarrus`.
-2. `gh repo clone agustinyarrus/navaja` (o `git clone https://github.com/agustinyarrus/navaja`).
-3. Instalar Go y correr `.\build.ps1 -Test`.
-4. Para las pruebas contra oráculos: Python 3.12+ con `pip install pillow numpy pikepdf pypdf pypdfium2 zxing-cpp segno reportlab`, ffmpeg, y `.\scripts\fixtures.ps1` para regenerar los archivos de prueba.
-5. Seguir por [docs/PENDIENTE.md](docs/PENDIENTE.md).
+1. `git clone https://github.com/agustinyarrus/navaja`
+2. Instalar Go y correr `.\build.ps1 -Test`.
+3. Para las pruebas contra oráculos: Python 3.12+ con `pip install pillow numpy pikepdf pypdf pypdfium2 zxing-cpp segno reportlab`, ffmpeg, y `.\scripts\fixtures.ps1` para regenerar los archivos de prueba.
+4. Seguir por [docs/PENDIENTE.md](docs/PENDIENTE.md).
 
 ## Licencia
 
